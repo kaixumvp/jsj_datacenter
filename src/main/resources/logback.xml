@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 定义traceId变量 -->
+    <property name="TRACE_ID" value="%X{traceId:-default}" />
+
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%X{traceId}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 按traceId分文件的SiftingAppender -->
+    <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator class="ch.qos.logback.classic.sift.MDCBasedDiscriminator">
+            <key>traceId</key>
+            <defaultValue>default</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${traceId}" class="ch.qos.logback.core.FileAppender">
+                <file>logs/${traceId}.log</file>
+                <append>false</append>
+                <encoder>
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <!-- 异步记录日志，提高性能 -->
+    <appender name="ASYNC_SIFT" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SIFT" />
+        <queueSize>1024</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+    </appender>
+
+    <!-- 根日志级别 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ASYNC_SIFT" />
+    </root>
+</configuration>

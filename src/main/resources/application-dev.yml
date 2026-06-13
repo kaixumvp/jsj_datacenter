@@ -1,0 +1,67 @@
+# 日志配置
+logging:
+  level:
+    com.jsj.datacenter: debug
+    org.springframework: warn
+    com.baomidou.mybatisplus: error
+
+
+# Spring配置
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 500MB
+      # 设置总上传的文件大小
+      max-request-size: 500MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/datacenter
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      pool-name: MyHikariCP
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 86400
+
+# Swagger配置
+knife4j:
+  # 是否开启swagger
+  enabled: true
+  production: false
+
+# 脚本路径配置
+calculate:
+  shell:
+    path: D:\doc\xl
+
+# 环境监测API配置
+environment:
+  api:
+    base-url: http://localhost:8080  # 请修改为实际的API地址
+    mock-enabled: true  # 是否启用Mock数据模式（本地测试用）
